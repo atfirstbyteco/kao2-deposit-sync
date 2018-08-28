@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class AccountLog extends Model
+{
+    protected $fillable = [
+        'account_id',
+        'account_log_type',
+        'account_log_message',
+        'account_log_change',
+        'account_log_balance',
+        'active',
+    ];
+    protected $boolean = [
+        'active'
+    ];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+}
