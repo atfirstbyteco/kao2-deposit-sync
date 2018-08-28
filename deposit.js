@@ -36,7 +36,7 @@ app.get('/', function (req, res) {
   });
 });
 app.get('/getbalance', function (req, res) {
-    redisclient.get('devtestbalance', function (error, result) {
+    redisclient.get('balance', function (error, result) {
         if(result){
             res.json({
                 'status' : 'success',

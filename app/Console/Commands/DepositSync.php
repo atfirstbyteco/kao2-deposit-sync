@@ -7,6 +7,7 @@ use App\Libraries\ScbDeposit;
 use App\Models\Account;
 use App\Models\AccountLog;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\DB;
 class DepositSync extends Command
 {
     /**
@@ -71,14 +72,15 @@ class DepositSync extends Command
 
             }
         }
-        $accounts_balance = Account::where([
+        $accounts_balance = Account::select(DB::raw('(SUM(account_adjust)+SUM(account_offset)+SUM(account_balance)) as total_donate'))->where([
             'active' => 1
-        ])->pluck('account_balance');
+        ])->pluck('total_donate');
         $totalamount = 0;
         foreach($accounts_balance as $account_balance){
             $totalamount += (float) $account_balance;
         }
-        Redis::set('devtestbalance', $totalamount);
+        $this->info("Donation :".number_format($totalamount,2));
+        Redis::set('balance', $totalamount);
 
     }
 }
