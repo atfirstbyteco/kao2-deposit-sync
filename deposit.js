@@ -1,11 +1,11 @@
 var app = require('express')();
-
+require('dotenv').config();
 
 var io = require('socket.io')(server);
 const fs = require('fs');
 var redis = require('redis');
-const redishost = "127.0.0.1";
-const redisport = 6379;
+const redishost = REDIS_HOST || "127.0.0.1";
+const redisport = REDIS_PORT || 6379;
 
 
 
