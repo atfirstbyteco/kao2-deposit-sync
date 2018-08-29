@@ -1,7 +1,7 @@
 var app = require('express')();
 require('dotenv').config();
 
-var io = require('socket.io')(server);
+
 const fs = require('fs');
 var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
@@ -23,6 +23,7 @@ if(process.env.USE_HTTPS=='true'){
     console.log('Serve over HTTP');
 }
 
+var io = require('socket.io')(server);
 
 var redisclient = redis.createClient(redisport, redishost);
 redisclient.on('connect', function() {
