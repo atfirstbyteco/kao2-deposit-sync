@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\AccountLog;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\DB;
 class SmsController extends Controller
 {
     public function trigger(Request $request,$accountNo)
@@ -30,6 +32,17 @@ class SmsController extends Controller
             'account_log_balance' => $account->account_balance,
             'active' => true,
         ]);
+
+        $accounts_balance = Account::select(DB::raw('(SUM(account_adjust)+SUM(account_offset)+SUM(account_balance)) as total_donate'))->where([
+            'active' => 1
+        ])->pluck('total_donate');
+        $totalamount = 0;
+        foreach($accounts_balance as $account_balance){
+            $totalamount += (float) $account_balance;
+        }
+        $this->info("Donation :".number_format($totalamount,2));
+        Redis::set('balance', $totalamount);
+
         return response()->json([
             'status'=>'success',
             'ref' => $ref,
