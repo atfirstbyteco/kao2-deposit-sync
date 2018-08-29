@@ -52,7 +52,7 @@ class ScbDeposit {
             $request = $this->client->post('accounts/deposits/inquiry', [
                 'headers' => $this->headers,
                 'verify' => false,
-                'body' => json_encode($requestbody)
+                'json' => $requestbody
             ]);
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
