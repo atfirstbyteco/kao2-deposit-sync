@@ -47,7 +47,7 @@ class ScbDeposit {
             ]);
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
-            \Log::error($e->getMessage());
+            \Log::critical($e->getMessage());
             return false;
         }
 
