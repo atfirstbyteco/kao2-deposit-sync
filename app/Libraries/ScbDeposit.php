@@ -43,14 +43,14 @@ class ScbDeposit {
         try{
 
             $request = $this->client->post('accounts/deposits/inquiry', [
-                'headers' => $headers,
+                'headers' => $this->headers,
                 'verify' => false,
                 'json' => [
                         "accountNumber" => $accountNo,
-                        "accountCurrency" => $headers['accountCurrency'],
-                        "includeBalance" => $headers['includeBalance'],
-                        "includeExtBalance" => $headers['includeExtBalance'],
-                        "includeInterest" => $headers['includeInterest']
+                        'accountCurrency' => env('SCB_DEPOSIT_HEADER_ACCOUNT_CURRENCY',764),
+                        'includeBalance' => env('SCB_DEPOSIT_HEADER_INCLUDE_BALANCE',true),
+                        'includeExtBalance' => env('SCB_DEPOSIT_HEADER_INCLUDE_EXT_BALANCE',true),
+                        'includeInterest' => env('SCB_DEPOSIT_HEADER_INCLUDE_INTEREST',true)
                 ]
             ]);
             return json_decode($request->getBody()->getContents());

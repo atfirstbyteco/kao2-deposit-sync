@@ -42,10 +42,7 @@ return [
                 'apisecret' => env('SCB_DEPOSIT_HEADER_APISECRET'),
                 'requestUID' => env('SCB_DEPOSIT_HEADER_REQUEST_UID','UUID'),
                 'resourceOwnerID' => env('SCB_DEPOSIT_HEADER_OWNER_ID'),
-                'accountCurrency' => env('SCB_DEPOSIT_HEADER_ACCOUNT_CURRENCY',764),
-                'includeBalance' => env('SCB_DEPOSIT_HEADER_INCLUDE_BALANCE',true),
-                'includeExtBalance' => env('SCB_DEPOSIT_HEADER_INCLUDE_EXT_BALANCE',true),
-                'includeInterest' => env('SCB_DEPOSIT_HEADER_INCLUDE_INTEREST',true)
+
             ]
         ]
     ]
