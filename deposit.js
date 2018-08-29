@@ -16,10 +16,11 @@ if(process.env.HTTPS==true){
     };
     var server = require('https');
     server.createServer(options, app).listen(process.env.PORT || 8443);
-    console.log('Secure under HTTPS');
+    console.log('Secure over HTTPS');
 }else{
     var server = require('http');
     server.createServer(app).listen(process.env.PORT || 8443);
+    console.log('Serve over HTTP');
 }
 
 
