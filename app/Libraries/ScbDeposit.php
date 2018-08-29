@@ -37,10 +37,11 @@ class ScbDeposit {
     }
     public function getBalance($accountNo)
     {
+        $headers = array_merge($this->headers,[
+            'accountNumber' => $accountNo
+        ]);
         try{
-            $headers = array_merge($this->headers,[
-                'accountNumber' => $accountNo
-            ]);
+
             $request = $this->client->post('accounts/deposits/inquiry/'.$accountNo, [
                 'headers' => $headers,
                 'verify' => false
@@ -48,6 +49,7 @@ class ScbDeposit {
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
             \Log::critical($e->getMessage());
+            \Log::critical("Header : ",$headers);
             return false;
         }
 
