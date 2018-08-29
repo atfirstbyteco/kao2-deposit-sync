@@ -57,8 +57,8 @@ class ScbDeposit {
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
             \Log::critical($e->getMessage(),[
-                'header' => json_encode($this->headers),
-                'requestbody' => json_encode($requestbody)
+                'HEADERS' => json_encode($this->headers),
+                'REQUESTBODY' => json_encode($requestbody)
             ]);
             return false;
         }
