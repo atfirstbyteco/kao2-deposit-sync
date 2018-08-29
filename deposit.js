@@ -11,8 +11,8 @@ const redisport = process.env.REDIS_PORT || 6379;
 
 if(process.env.HTTPS==true){
     const options = {
-        key: fs.readFileSync('/Users/mycools/root-certificate/b2bapi.scb.io.key'),
-        cert: fs.readFileSync('/Users/mycools/root-certificate/b2bapi.scb.io.crt')
+        key: fs.readFileSync(process.env.SSL_KEY),
+        cert: fs.readFileSync(process.env.SSL_CERT)
     };
     var server = require('https');
     server.createServer(options, app).listen(process.env.PORT || 8443);
@@ -30,6 +30,18 @@ redisclient.on('connect', function() {
 redisclient.on('error', function (err) {
     console.log('Something went wrong ' + err);
 });
+app.use(function (req, res, next) {
+
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+
+    // Pass to next layer of middleware
+    next();
+});
 app.get('/', function (req, res) {
   res.json({
       'status' : 'success'
@@ -46,6 +58,7 @@ app.get('/getbalance', function (req, res) {
             res.json({
                 'status' : 'error',
                 'balance' : 0,
+                'error' : error
             });
         }
     });
