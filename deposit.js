@@ -14,7 +14,7 @@ if(process.env.USE_HTTPS=='true'){
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERT)
     };
-    var server = require('https').Server(app);
+    var server = require('https').Server(options,app);
     console.log('Serve over HTTPS');
 }else{
     var server = require('http').Server(app);
