@@ -44,7 +44,14 @@ class ScbDeposit {
 
             $request = $this->client->post('accounts/deposits/inquiry/'.$accountNo, [
                 'headers' => $headers,
-                'verify' => false
+                'verify' => false,
+                'json' => [
+                        "accountNumber" => $accountNo,
+                        "accountCurrency" => $headers['accountCurrency'],
+                        "includeBalance" => $headers['includeBalance'],
+                        "includeExtBalance" => $headers['includeExtBalance'],
+                        "includeInterest" => $headers['includeInterest']
+                ]
             ]);
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
