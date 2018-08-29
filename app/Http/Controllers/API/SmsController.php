@@ -40,7 +40,6 @@ class SmsController extends Controller
         foreach($accounts_balance as $account_balance){
             $totalamount += (float) $account_balance;
         }
-        $this->info("Donation :".number_format($totalamount,2));
         Redis::set('balance', $totalamount);
 
         return response()->json([
