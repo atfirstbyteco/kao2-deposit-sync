@@ -4,7 +4,7 @@ const fs = require('fs');
 require('dotenv').config();
 
 
-const fs = require('fs');
+
 var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
 const redisport = process.env.REDIS_PORT || 6379;
