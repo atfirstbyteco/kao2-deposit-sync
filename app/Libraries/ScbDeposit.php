@@ -42,7 +42,7 @@ class ScbDeposit {
         ]);
         try{
 
-            $request = $this->client->post('accounts/deposits/inquiry/'.$accountNo, [
+            $request = $this->client->post('accounts/deposits/inquiry', [
                 'headers' => $headers,
                 'verify' => false,
                 'json' => [
