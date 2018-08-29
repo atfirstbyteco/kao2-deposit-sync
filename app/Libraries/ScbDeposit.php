@@ -40,7 +40,7 @@ class ScbDeposit {
         $headers = array_merge($this->headers,[
             'accountNumber' => $accountNo
         ]);
-        $request = $this->client->get('product-fulfillment/deposits/'.$accountNo, [
+        $request = $this->client->post('accounts/deposits/inquiry/'.$accountNo, [
             'headers' => $headers,
             'verify' => false
         ]);
