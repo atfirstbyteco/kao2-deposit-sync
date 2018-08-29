@@ -9,7 +9,7 @@ const redisport = process.env.REDIS_PORT || 6379;
 
 
 
-if(process.env.HTTPS==true){
+if(process.env.USE_HTTPS==true){
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERT)
