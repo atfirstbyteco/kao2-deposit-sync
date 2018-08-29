@@ -1,4 +1,6 @@
 var app = require('express')();
+
+
 require('dotenv').config();
 
 
@@ -7,23 +9,20 @@ var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
 const redisport = process.env.REDIS_PORT || 6379;
 
-
-
 if(process.env.USE_HTTPS=='true'){
     const options = {
         key: fs.readFileSync(process.env.SSL_KEY),
         cert: fs.readFileSync(process.env.SSL_CERT)
     };
-    var server = require('https');
-    server.createServer(options, app).listen(process.env.PORT || 8443);
-    console.log('Secure over HTTPS');
+    var server = require('https').Server(app);
+    console.log('Serve over HTTPS');
 }else{
-    var server = require('http');
-    server.createServer(app).listen(process.env.PORT || 8443);
+    var server = require('http').Server(app);
     console.log('Serve over HTTP');
 }
-
 var io = require('socket.io')(server);
+server.listen(process.env.PORT || 8443);
+// WARNING: app.listen(80) will NOT work here!
 
 var redisclient = redis.createClient(redisport, redishost);
 redisclient.on('connect', function() {
@@ -32,6 +31,8 @@ redisclient.on('connect', function() {
 redisclient.on('error', function (err) {
     console.log('Something went wrong ' + err);
 });
+
+
 app.use(function (req, res, next) {
 
     // Website you wish to allow to connect
@@ -67,7 +68,22 @@ app.get('/getbalance', function (req, res) {
   });
 
 io.on('connection', function (socket) {
-  socket.on('getbalance', function (data) {
+
+  socket.on('my other event', function (data) {
     console.log(data);
   });
 });
+setInterval(function(){
+    redisclient.get('balance', function (error, result) {
+        if(result){
+            io.emit('balance', {
+                'status' : 'success',
+                'balance' : parseFloat(result).toFixed(2),
+            });
+
+        }else{
+
+        }
+    });
+
+},5000);
