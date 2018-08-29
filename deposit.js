@@ -27,7 +27,6 @@ if(process.env.HTTPS==true){
 var redisclient = redis.createClient(redisport, redishost);
 redisclient.on('connect', function() {
     console.log('Redis client connected');
-    redisclient.set('devtestbalance', 999999.99, redis.print);
 });
 redisclient.on('error', function (err) {
     console.log('Something went wrong ' + err);
