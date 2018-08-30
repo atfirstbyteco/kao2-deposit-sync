@@ -38,7 +38,7 @@ class ScbDeposit {
     public function getBalance($accountNo)
     {
         $headers = array_merge($this->headers,[
-            'accountNumber' => $accountNo
+            'requestUID' => str_random(32)
         ]);
         $requestbody = [
             "accountNumber" => $accountNo,
@@ -50,14 +50,14 @@ class ScbDeposit {
         try{
 
             $request = $this->client->post('accounts/deposits/inquiry', [
-                'headers' => $this->headers,
+                'headers' => $headers,
                 'verify' => false,
                 'json' => $requestbody
             ]);
             return json_decode($request->getBody()->getContents());
         }catch(\Exception $e){
             \Log::critical($e->getMessage(),[
-                'HEADERS' => json_encode($this->headers),
+                'HEADERS' => json_encode($headers),
                 'REQUESTBODY' => json_encode($requestbody)
             ]);
             return false;
