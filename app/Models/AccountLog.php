@@ -12,6 +12,7 @@ class AccountLog extends Model
         'account_log_message',
         'account_log_change',
         'account_log_balance',
+        'account_log_ref',
         'active',
     ];
     protected $boolean = [
