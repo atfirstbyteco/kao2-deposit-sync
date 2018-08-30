@@ -17,7 +17,7 @@ class SmsController extends Controller
             'account_no' => $accountNo,
             'active' => 1
         ])->firstOrFail();
-        \Log::debug("BODY",$request->all());
+        \Log::debug("BODY : ",$request->all());
         $amount = ($request->get('amount'))?$request->get('amount'):10;
         $mobileno = ($request->get('mobileno'))?$request->get('mobileno'):'66XXXXXXXXX';
         $ref = $request->get('ref');
