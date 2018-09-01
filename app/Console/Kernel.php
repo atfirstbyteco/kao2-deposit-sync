@@ -24,7 +24,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('kao:deposit:sync')->everyFiveMinutes();
+        $schedule->command('kao:deposit:sync')
+                ->timezone('Asia/Bangkok')
+                ->everyFiveMinutes()
+                ->unlessBetween('18:00', '20:00');
         // $schedule->command('inspire')
         //          ->hourly();
     }
