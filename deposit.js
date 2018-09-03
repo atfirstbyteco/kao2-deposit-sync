@@ -1,6 +1,7 @@
 var app = require('express')();
 const fs = require('fs');
-
+var deposit_balance = 0;
+var deposit_display = 0;
 require('dotenv').config();
 
 
@@ -27,6 +28,16 @@ server.listen(process.env.PORT || 8443);
 var redisclient = redis.createClient(redisport, redishost);
 redisclient.on('connect', function() {
     console.log('Redis client connected');
+    redisclient.get('balance', function (error, result) {
+        if(result){
+            deposit_balance = parseFloat(result).toFixed(2);
+            if(deposit_display == 0){
+                deposit_display = deposit_balance-5000;
+            }
+        }else{
+
+        }
+    });
 });
 redisclient.on('error', function (err) {
     console.log('Something went wrong ' + err);
@@ -51,20 +62,10 @@ app.get('/', function (req, res) {
   });
 });
 app.get('/getbalance', function (req, res) {
-    redisclient.get('balance', function (error, result) {
-        if(result){
-            res.json({
-                'status' : 'success',
-                'balance' : parseFloat(result).toFixed(2),
-            });
-        }else{
-            res.json({
-                'status' : 'error',
-                'balance' : 0,
-                'error' : error
-            });
-        }
-    });
+        res.json({
+            'status' : 'success',
+            'balance' : parseFloat(deposit_display).toFixed(2),
+        });
   });
 
 io.on('connection', function (socket) {
@@ -73,17 +74,33 @@ io.on('connection', function (socket) {
     console.log(data);
   });
 });
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
 setInterval(function(){
     redisclient.get('balance', function (error, result) {
         if(result){
+            deposit_balance = parseFloat(result).toFixed(2);
+            if(deposit_display == 0){
+                deposit_display = deposit_balance-1000;
+            }
+        }else{
+
+        }
+    });
+},1000);
+setInterval(function(){
+        if(deposit_balance > deposit_display){
+            deposit_display = deposit_display+getRandomInt(500);
+            if(deposit_display > deposit_balance){
+                deposit_display = deposit_balance;
+            }
             io.emit('balance', {
                 'status' : 'success',
-                'balance' : parseFloat(result).toFixed(2),
+                'balance' : parseFloat(deposit_display).toFixed(2),
             });
 
         }else{
 
         }
-    });
-
 },5000);
