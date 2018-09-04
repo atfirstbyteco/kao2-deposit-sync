@@ -31,13 +31,24 @@ redisclient.on('connect', function() {
     redisclient.get('balance', function (error, result) {
         if(result){
             deposit_balance = parseFloat(result).toFixed(2);
-            if(deposit_display == 0){
-                deposit_display = deposit_balance-5000;
-            }
+            // if(deposit_display == 0){
+            //     deposit_display = deposit_balance-5000;
+            // }
         }else{
 
         }
     });
+    redisclient.get('balance_display', function (error, result) {
+        if(result){
+            deposit_balance = parseFloat(result).toFixed(2);
+            if(deposit_display == 0){
+                deposit_display = deposit_balance-5000;
+            }
+        }else{
+            deposit_display = deposit_balance-5000;
+        }
+    });
+
 });
 redisclient.on('error', function (err) {
     console.log('Something went wrong ' + err);
