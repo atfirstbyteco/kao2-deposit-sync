@@ -124,7 +124,7 @@ setInterval(function(){
 function updatedepositclient()
 {
     if(deposit_balance > deposit_display){
-        let change = getRandomInt(100);
+        let change = getRandomInt(50);
         let changedecinal = getRandomInt(99);
         change = change+(100/changedecinal);
 
