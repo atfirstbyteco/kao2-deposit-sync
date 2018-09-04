@@ -51,8 +51,8 @@ redisclient.on('connect', function() {
                 if(deposit_display2 == 0){
                     deposit_display = deposit_balance-400000;
                 }else{
-                    //deposit_display = deposit_display2;
-                    deposit_display = deposit_balance-400000;
+                    deposit_display = deposit_display2;
+                    //deposit_display = deposit_balance-400000;
                 }
             }else{
                 deposit_display = deposit_balance-400000;
