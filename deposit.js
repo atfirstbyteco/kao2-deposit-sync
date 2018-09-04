@@ -45,18 +45,19 @@ redisclient.on('connect', function() {
         }else{
 
         }
-    });
-    redisclient.get('balance_display', function (error, result) {
-        if(result){
-            deposit_balance = parseFloat(result).toFixed(2);
-            if(deposit_display == 0){
+        redisclient.get('balance_display', function (error2, result2) {
+            if(result2){
+                deposit_balance = parseFloat(result2).toFixed(2);
+                if(deposit_display == 0){
+                    deposit_display = deposit_balance-100000;
+                }
+            }else{
                 deposit_display = deposit_balance-100000;
             }
-        }else{
-            deposit_display = deposit_balance-100000;
-        }
-        updatedepositclient();
+            updatedepositclient();
+        });
     });
+
 
 });
 redisclient.on('error', function (err) {
