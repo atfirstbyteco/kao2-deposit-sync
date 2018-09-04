@@ -47,9 +47,11 @@ redisclient.on('connect', function() {
         }
         redisclient.get('balance_display', function (error2, result2) {
             if(result2){
-                deposit_balance = parseFloat(result2).toFixed(2);
-                if(deposit_display == 0){
+                deposit_display2 = parseFloat(result2).toFixed(2);
+                if(deposit_display2 == 0){
                     deposit_display = deposit_balance-100000;
+                }else{
+                    deposit_display = deposit_display2;
                 }
             }else{
                 deposit_display = deposit_balance-100000;
