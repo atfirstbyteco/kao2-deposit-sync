@@ -81,9 +81,9 @@ setInterval(function(){
     redisclient.get('balance', function (error, result) {
         if(result){
             deposit_balance = parseFloat(result).toFixed(2);
-            if(deposit_display == 0){
-                deposit_display = deposit_balance-1000;
-            }
+            // if(deposit_display == 0){
+            //     deposit_display = deposit_balance-1000;
+            // }
         }else{
 
         }
@@ -95,6 +95,7 @@ setInterval(function(){
             if(deposit_display > deposit_balance){
                 deposit_display = deposit_balance;
             }
+            redisclient.get('balance_display',deposit_display);
             io.emit('balance', {
                 'status' : 'success',
                 'balance' : parseFloat(deposit_display).toFixed(2),
