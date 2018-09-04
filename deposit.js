@@ -122,4 +122,4 @@ setInterval(function(){
         }else{
 
         }
-},5000);
+},10000);
