@@ -36,14 +36,16 @@ class SmsController extends Controller
             'active' => true,
         ]);
 
-        $accounts_balance = Account::select(DB::raw('(SUM(account_adjust)+SUM(account_offset)+SUM(account_balance)) as total_donate'))->where([
-            'active' => 1
-        ])->pluck('total_donate');
-        $totalamount = 0;
-        foreach($accounts_balance as $account_balance){
-            $totalamount += (float) $account_balance;
-        }
-        Redis::set('balance', $totalamount);
+        // $accounts_balance = Account::select(DB::raw('(SUM(account_adjust)+SUM(account_offset)+SUM(account_balance)) as total_donate'))->where([
+        //     'active' => 1
+        // ])->pluck('total_donate');
+        // $totalamount = 0;
+        // foreach($accounts_balance as $account_balance){
+        //     $totalamount += (float) $account_balance;
+        // }
+        // $old = Redis::get('balance');
+        // $new = $old+10;
+        // Redis::set('balance', $totalamount);
 
         return response()->json([
             'status'=>'success',
