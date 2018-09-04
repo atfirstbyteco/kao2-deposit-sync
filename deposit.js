@@ -95,7 +95,7 @@ setInterval(function(){
             if(deposit_display > deposit_balance){
                 deposit_display = deposit_balance;
             }
-            redisclient.get('balance_display',deposit_display);
+            redisclient.set('balance_display',deposit_display);
             io.emit('balance', {
                 'status' : 'success',
                 'balance' : parseFloat(deposit_display).toFixed(2),
