@@ -108,7 +108,7 @@ setInterval(function(){
             if(newdeposit_balance > deposit_balance){
                 console.log("Update new deposit balance to ",newdeposit_balance,"THB");
             }else{
-                console.log("No new balance change");
+                //console.log("No new balance change");
             }
             deposit_balance = newdeposit_balance;
             deposit.set(deposit_balance);
@@ -142,5 +142,8 @@ function updatedepositclient()
     }else{
 
     }
+    let t = getRandomInt(30)+10;
+    console.log("Next update client in",t,"second");
+    setTimeout(updatedepositclient,t*1000);
 }
-setInterval(updatedepositclient,10000);
+//setInterval(updatedepositclient,10000);
