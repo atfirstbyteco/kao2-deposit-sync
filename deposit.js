@@ -49,12 +49,13 @@ redisclient.on('connect', function() {
             if(result2){
                 deposit_display2 = parseFloat(result2).toFixed(2);
                 if(deposit_display2 == 0){
-                    deposit_display = deposit_balance-100000;
+                    deposit_display = deposit_balance-400000;
                 }else{
-                    deposit_display = deposit_display2;
+                    //deposit_display = deposit_display2;
+                    deposit_display = deposit_balance-400000;
                 }
             }else{
-                deposit_display = deposit_balance-100000;
+                deposit_display = deposit_balance-400000;
             }
             displaydeposit.set(parseFloat(deposit_display).toFixed(2));
             updatedepositclient();
