@@ -126,7 +126,7 @@ function updatedepositclient()
     if(deposit_balance > deposit_display){
         let change = getRandomInt(50);
         let changedecinal = getRandomInt(99);
-        change = change+(100/changedecinal);
+        change = change+(changedecinal/100);
 
         deposit_display = parseFloat(deposit_display)+parseFloat(change);
         if(deposit_display > deposit_balance){
