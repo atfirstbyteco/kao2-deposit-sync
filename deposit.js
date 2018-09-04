@@ -56,6 +56,7 @@ redisclient.on('connect', function() {
             }else{
                 deposit_display = deposit_balance-100000;
             }
+            displaydeposit.set(parseFloat(deposit_display).toFixed(2));
             updatedepositclient();
         });
     });
