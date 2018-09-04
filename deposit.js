@@ -125,12 +125,13 @@ function updatedepositclient()
         let change = getRandomInt(100);
         let changedecinal = getRandomInt(99);
         change = change+(100/changedecinal);
-        displaydepositchange.set(parseFloat(change).toFixed(2));
-        deposit_display = deposit_display+change;
+
+        deposit_display = parseFloat(deposit_display)+parseFloat(change);
         if(deposit_display > deposit_balance){
             deposit_display = deposit_balance;
         }
         displaydeposit.set(parseFloat(deposit_display).toFixed(2));
+        displaydepositchange.set(parseFloat(change).toFixed(2));
         redisclient.set('balance_display',deposit_display);
         io.emit('balance', {
             'status' : 'success',
