@@ -20,7 +20,7 @@ class SmsController extends Controller
         \Log::debug("BODY : ",$request->all());
         $amount = ($request->get('amount'))?$request->get('amount'):10;
         $mobileno = ($request->get('mobileno'))?$request->get('mobileno'):'66XXXXXXXXX';
-        $mobileno = substr($mobileno,0,strlen($mobileno)-3) . "XX";
+        $mobileno = substr($mobileno,0,strlen($mobileno)-3) . "XXX";
         $ref = $request->get('ref');
 
         $account_log_change = $amount;
