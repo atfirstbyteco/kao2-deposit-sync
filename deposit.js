@@ -3,9 +3,14 @@ const fs = require('fs');
 var deposit_balance = 0;
 var deposit_display = 0;
 require('dotenv').config();
+var probe = require('pmx').probe();
 
-
-
+var deposit = probe.metric({
+    name    : 'Real Deposit'
+});
+var displaydeposit = probe.metric({
+    name    : 'Display Deposit'
+});
 var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
 const redisport = process.env.REDIS_PORT || 6379;
@@ -92,6 +97,7 @@ setInterval(function(){
     redisclient.get('balance', function (error, result) {
         if(result){
             deposit_balance = parseFloat(result).toFixed(2);
+            deposit.set(deposit_balance);
             // if(deposit_display == 0){
             //     deposit_display = deposit_balance-1000;
             // }
@@ -106,6 +112,7 @@ setInterval(function(){
             if(deposit_display > deposit_balance){
                 deposit_display = deposit_balance;
             }
+            displaydeposit.set(deposit_display);
             redisclient.set('balance_display',deposit_display);
             io.emit('balance', {
                 'status' : 'success',
