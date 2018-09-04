@@ -96,7 +96,13 @@ function getRandomInt(max) {
 setInterval(function(){
     redisclient.get('balance', function (error, result) {
         if(result){
-            deposit_balance = parseFloat(result).toFixed(2);
+            newdeposit_balance = parseFloat(result).toFixed(2);
+            if(newdeposit_balance > deposit_balance){
+                console.log("Update new deposit balance to ",newdeposit_balance,"THB");
+            }else{
+                console.log("No new balance change");
+            }
+            deposit_balance = newdeposit_balance;
             deposit.set(deposit_balance);
             // if(deposit_display == 0){
             //     deposit_display = deposit_balance-1000;
