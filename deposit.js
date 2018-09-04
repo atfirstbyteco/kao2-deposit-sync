@@ -11,6 +11,9 @@ var deposit = probe.metric({
 var displaydeposit = probe.metric({
     name    : 'Display Deposit'
 });
+var displaydepositchange = probe.metric({
+    name    : 'Display Change'
+});
 var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
 const redisport = process.env.REDIS_PORT || 6379;
@@ -47,11 +50,12 @@ redisclient.on('connect', function() {
         if(result){
             deposit_balance = parseFloat(result).toFixed(2);
             if(deposit_display == 0){
-                deposit_display = deposit_balance-5000;
+                deposit_display = deposit_balance-100000;
             }
         }else{
-            deposit_display = deposit_balance-5000;
+            deposit_display = deposit_balance-100000;
         }
+        updatedepositclient();
     });
 
 });
@@ -112,20 +116,26 @@ setInterval(function(){
         }
     });
 },1000);
-setInterval(function(){
-        if(deposit_balance > deposit_display){
-            deposit_display = deposit_display+getRandomInt(500);
-            if(deposit_display > deposit_balance){
-                deposit_display = deposit_balance;
-            }
-            displaydeposit.set(parseFloat(deposit_display).toFixed(2));
-            redisclient.set('balance_display',deposit_display);
-            io.emit('balance', {
-                'status' : 'success',
-                'balance' : parseFloat(deposit_display).toFixed(2),
-            });
-
-        }else{
-
+function updatedepositclient()
+{
+    if(deposit_balance > deposit_display){
+        let change = getRandomInt(100);
+        let changedecinal = getRandomInt(99);
+        change = change+(100/changedecinal);
+        displaydepositchange.set(parseFloat(change).toFixed(2));
+        deposit_display = deposit_display+change;
+        if(deposit_display > deposit_balance){
+            deposit_display = deposit_balance;
         }
-},10000);
+        displaydeposit.set(parseFloat(deposit_display).toFixed(2));
+        redisclient.set('balance_display',deposit_display);
+        io.emit('balance', {
+            'status' : 'success',
+            'balance' : parseFloat(deposit_display).toFixed(2),
+        });
+
+    }else{
+
+    }
+}
+setInterval(updatedepositclient,10000);
