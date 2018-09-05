@@ -9,6 +9,7 @@ class ScbDeposit {
     protected $endpoint = "http://localhost/";
     protected $apikey = "";
     protected $client;
+    protected $graph;
     protected $headers = [];
     public function __construct()
     {
@@ -26,6 +27,10 @@ class ScbDeposit {
             'headers' => $this->headers,
             'verify' => false
         ]);
+        $this->graph = new Client([
+            'base_uri' => 'https://graph.facebook.com/',
+            'verify' => false
+        ]);
     }
     public function endpoint($requestPath = '')
     {
@@ -34,6 +39,21 @@ class ScbDeposit {
     public function apikey()
     {
         return $this->apikey;
+    }
+    public function updateShare()
+    {
+        try{
+            $request = $this->graph->post('/',[
+                'form_params' => [
+                    'id' => 'https://www.kaokonlakao.com/',
+                    'scrape' => true,
+                    'access_token' => '817308938474623|zEk-ZTgsR732cve4qjlc8aCAE-I'
+                ]
+            ]);
+            return json_decode($request->getBody()->getContents());
+        }catch(\Exception $e){
+            return $e->getMessage();
+        }
     }
     public function getBalance($accountNo)
     {
