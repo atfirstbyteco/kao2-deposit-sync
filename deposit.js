@@ -6,6 +6,11 @@ var nextiopush = 0;
 require('dotenv').config();
 var probe = require('pmx').probe();
 
+Number.prototype.format = function(n, x) {
+    var re = '\\d(?=(\\d{' + (x || 3) + '})+' + (n > 0 ? '\\.' : '$') + ')';
+    return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};
+
 var deposit = probe.metric({
     name    : 'Real Deposit'
 });
@@ -94,6 +99,8 @@ redisclient.on('connect', function() {
                 deposit_display2 = parseFloat(result2).toFixed(2);
                 if(deposit_display2 == 0){
                     deposit_display = deposit_balance-400000;
+                }else if(deposit_display2 < (deposit_balance-400000)){
+                    deposit_display = deposit_balance-400000;
                 }else{
                     deposit_display = deposit_display2;
                     //deposit_display = deposit_balance-400000;
@@ -156,7 +163,7 @@ setInterval(function(){
                 //console.log("No new balance change");
             }
             deposit_balance = newdeposit_balance;
-            deposit.set(deposit_balance);
+            deposit.set(parseFloat(deposit_balance).format(2));
             // if(deposit_display == 0){
             //     deposit_display = deposit_balance-1000;
             // }
@@ -171,17 +178,21 @@ function updatedepositclient()
     let changedecinal = getRandomInt(99);
     let remainchange = parseFloat(deposit_balance)-parseFloat(deposit_display);
     let maxchange = remainchange/60;
-    let change = getRandomInt(maxchange)+10;
-    displaydepositremain.set(parseFloat(remainchange).toFixed(2));
+    let change = 10;
+    if(maxchange > 10){
+        change = getRandomInt(maxchange)+10;
+    }
+
+    displaydepositremain.set(parseFloat(remainchange).format(2));
     if(deposit_balance > deposit_display){
         change = change+(changedecinal/100);
         deposit_display = parseFloat(deposit_display)+parseFloat(change);
         if(deposit_display > deposit_balance){
             deposit_display = deposit_balance;
         }
-        displaydeposit.set(parseFloat(deposit_display).toFixed(2));
-        displaydepositchange.set(parseFloat(change).toFixed(2));
-        redisclient.set('balance_display',deposit_display);
+        displaydeposit.set(parseFloat(deposit_display).format(2));
+        displaydepositchange.set(parseFloat(change).format(2));
+        redisclient.set('balance_display',deposit_display.toFixed(2));
         io.emit('balance', {
             'status' : 'success',
             'balance' : parseFloat(deposit_display).toFixed(2),
@@ -192,7 +203,8 @@ function updatedepositclient()
     }
     let t = getRandomInt(30)+10;
     nextiopush = t;
-    console.log("Next update client in",t,"second");
+    console.log("Push new balance to client",deposit_display.format(2),"THB");
+    console.log("Next Push to client",t,"second");
     setTimeout(updatedepositclient,t*1000);
 }
 //setInterval(updatedepositclient,10000);
