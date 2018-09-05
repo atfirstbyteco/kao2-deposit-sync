@@ -2,6 +2,7 @@ var app = require('express')();
 const fs = require('fs');
 var deposit_balance = 0;
 var deposit_display = 0;
+var nextiopush = 0;
 require('dotenv').config();
 var probe = require('pmx').probe();
 
@@ -14,6 +15,49 @@ var displaydeposit = probe.metric({
 var displaydepositchange = probe.metric({
     name    : 'Display Change'
 });
+var displaydepositremain = probe.metric({
+    name    : 'Display Remain'
+});
+var nextupdatetime = 'Off';
+
+var metric = probe.metric({
+  name    : 'Next Sync',
+  value   : function() {
+    return nextupdatetime;
+  }
+});
+var iopush = probe.metric({
+    name    : 'Next Push to client',
+    value   : function() {
+      return "Off";
+    }
+  });
+var currtime = probe.metric({
+    name    : 'Current Time',
+    value   : function() {
+      return Date().toString();
+    }
+  });
+setInterval(function() {
+    if(nextiopush > 0){
+        nextiopush--;
+    }
+    iopush.set(nextiopush+" Second");
+    var d = new Date();
+    if(d.getHours() >= 17 && d.getHours() < 19){
+        nextupdatetime = "Off";
+    }else{
+        if(d.getMinutes() < 30){
+            nextupdatetime = (30-d.getMinutes()-1) + " Minute " + (60-d.getSeconds()-1) + " Second";
+        }else if(d.getMinutes() == 30){
+            nextupdatetime = (60-d.getSeconds()-1) + " Second";
+        }else if(d.getMinutes() > 30 && d.getMinutes() < 60){
+            nextupdatetime = (60-d.getMinutes()-1) + " Minute " + (60-d.getSeconds()-1) + " Second";
+        }
+    }
+
+
+  }, 1000);
 var redis = require('redis');
 const redishost = process.env.REDIS_HOST || "127.0.0.1";
 const redisport = process.env.REDIS_PORT || 6379;
@@ -123,11 +167,14 @@ setInterval(function(){
 },1000);
 function updatedepositclient()
 {
-    if(deposit_balance > deposit_display){
-        let change = getRandomInt(50);
-        let changedecinal = getRandomInt(99);
-        change = change+(changedecinal/100);
 
+    let changedecinal = getRandomInt(99);
+    let remainchange = parseFloat(deposit_balance)-parseFloat(deposit_display);
+    let maxchange = remainchange/60;
+    let change = getRandomInt(maxchange)+10;
+    displaydepositremain.set(parseFloat(remainchange).toFixed(2));
+    if(deposit_balance > deposit_display){
+        change = change+(changedecinal/100);
         deposit_display = parseFloat(deposit_display)+parseFloat(change);
         if(deposit_display > deposit_balance){
             deposit_display = deposit_balance;
@@ -144,6 +191,7 @@ function updatedepositclient()
 
     }
     let t = getRandomInt(30)+10;
+    nextiopush = t;
     console.log("Next update client in",t,"second");
     setTimeout(updatedepositclient,t*1000);
 }
